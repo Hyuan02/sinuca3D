@@ -19,6 +19,7 @@
     "babylonjs-loaders": "^4.0.3"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.0.6",
     "babel-preset-latest": "^6.24.1",
