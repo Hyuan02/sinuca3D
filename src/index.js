@@ -12,7 +12,7 @@ const mainCanvas = document.querySelector("#mainRender");
 // console.log(mainCanvas);
 
 const engine = new BABYLON.Engine(mainCanvas, true, {preserveDrawingBuffer: true, stencil: true});
-
+let controlsMap = {};
 
 const createScene = ()=>{
     const scene = new BABYLON.Scene(engine);
@@ -24,12 +24,18 @@ const createScene = ()=>{
         cue = new CuePool(value);
         cue.position = new Vec3(120,20,95);
         cue.rotation = new Vec3(0,180,0);
+    }).then(()=>{
+        initializeActionHandler(scene, cue);
     });
-    // CUE.position = new Vec3(10,10,10);
+
+    
     var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 10, new BABYLON.Vector3(0, 0, 0), scene);
     BALL_SYSTEM.createBall(0,0, scene);
     camera.attachControl(mainCanvas, true);
+    camera.inputs.attached.keyboard.detachControl();
     camera.setPosition(new BABYLON.Vector3(0, 80, 20));
+
+    
     new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
     return scene;
 }
@@ -42,9 +48,20 @@ engine.runRenderLoop(function(){
     scene.render();
 });
 
-// let v1 = new Vec3(20, 10 ,15);
-// console.log(v1.mag());
-// console.log(v1.norm().mag());
+
+function initializeActionHandler(scene, cue){
+    scene.actionManager = new BABYLON.ActionManager(scene);
+    scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, (evt)=> {								
+        controlsMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+    }));
+    scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, (evt)=>{								
+        controlsMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+    }));
+
+    scene.onBeforeRenderObservable.add(()=>{
+        cue.checkControl(controlsMap);
+    });
+}
 
 
 // the canvas/window resize event handler
