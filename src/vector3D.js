@@ -86,6 +86,15 @@ export default class Vec3 {
         return new Vec3(this.x/result, this.y/result, this.z/result);
     }
 
+
+    /**
+     * Return the vector multiplied by a escalar.
+     */
+
+     mulEs(num){
+        return new Vec3(this.x*num, this.y*num, this.z*num);
+     }
+
     // dot(vector){
     //     const norm_vec = this.norm();
 
