@@ -25,7 +25,7 @@ const createScene = ()=>{
         cue.position = new Vec3(120,20,95);
         cue.rotation = new Vec3(0,180,0);
     }).then(()=>{
-        initializeActionHandler(scene, cue);
+        initializeActionHandler(scene, cue, camera);
     });
 
     
@@ -49,7 +49,7 @@ engine.runRenderLoop(function(){
 });
 
 
-function initializeActionHandler(scene, cue){
+function initializeActionHandler(scene, cue,camera){
     scene.actionManager = new BABYLON.ActionManager(scene);
     scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, (evt)=> {								
         controlsMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
@@ -60,6 +60,7 @@ function initializeActionHandler(scene, cue){
 
     scene.onBeforeRenderObservable.add(()=>{
         cue.checkControl(controlsMap);
+        // cue.checkCameraPosition(camera);
     });
 }
 

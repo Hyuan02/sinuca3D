@@ -1,11 +1,12 @@
-import { Vector3, Matrix } from "babylonjs";
+import { Vector3, Matrix, VertexBuffer } from "babylonjs";
 import Vec3 from "./vector3D";
 const SPEED = 5;
 export default class CuePool{
     constructor(cueMesh){
         this.mesh = cueMesh;
-        this.mesh.setPivotPoint(new Vector3(0,50,50));
-        console.log(this.mesh.getPivotPoint());
+        ([this.maxPointX, this.maxPointY, this.maxPointZ, 
+        this.minPointX, this.minPointY, this.minPointZ] = this.forceBrutePoints(this.mesh.getVerticesData(VertexBuffer.PositionKind)));
+        this.mesh.setPivotPoint(new Vector3(this.maxPointX, this.maxPointY, this.maxPointZ));
         this.moveMode = false;
     }
 
@@ -60,6 +61,42 @@ export default class CuePool{
     }
 
 
+    checkCameraPosition(camera){
+        this.position = new Vec3(camera.position.x, this.position.y, camera.position.z);
+    }
+
+    forceBrutePoints(data){
+        let maxPointX=data[0], maxPointY=data[1], maxPointZ=data[2];
+        let minPointX=data[0], minPointY=data[1], minPointZ=data[2];
+        for(let i=0; i<data.length; i++){
+            let quote = i%3;
+            if(quote == 0){
+                if(maxPointX<data[i]){
+                    maxPointX = data[i];
+                }
+                else if(minPointX>data[i]){
+                    minPointX = data[i];
+                }
+            }
+            else if (quote == 1){
+                if(maxPointY<data[i]){
+                    maxPointY = data[i];
+                }
+                else if(minPointY>data[i]){
+                    minPointY = data[i];
+                }
+            }
+            else{
+                if(maxPointZ<data[i]){
+                    maxPointZ = data[i];
+                }
+                else if(minPointZ>data[i]){
+                    minPointZ = data[i];
+                }
+            }
+        }
+        return [maxPointX, maxPointY, maxPointZ, minPointX, minPointY, minPointZ];
+    }
 
     
 }
