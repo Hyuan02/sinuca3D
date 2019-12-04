@@ -71,28 +71,16 @@ export default class CuePool{
         for(let i=0; i<data.length; i++){
             let quote = i%3;
             if(quote == 0){
-                if(maxPointX<data[i]){
-                    maxPointX = data[i];
-                }
-                else if(minPointX>data[i]){
-                    minPointX = data[i];
-                }
+                minPointX = Math.min(minPointX, data[i]);
+                maxPointX = Math.max(maxPointX, data[i]);
             }
             else if (quote == 1){
-                if(maxPointY<data[i]){
-                    maxPointY = data[i];
-                }
-                else if(minPointY>data[i]){
-                    minPointY = data[i];
-                }
+                minPointY = Math.min(minPointY, data[i]);
+                maxPointY = Math.max(maxPointY, data[i]);
             }
             else{
-                if(maxPointZ<data[i]){
-                    maxPointZ = data[i];
-                }
-                else if(minPointZ>data[i]){
-                    minPointZ = data[i];
-                }
+                minPointZ = Math.min(minPointZ, data[i]);
+                maxPointZ = Math.max(maxPointZ, data[i]);
             }
         }
         return [maxPointX, maxPointY, maxPointZ, minPointX, minPointY, minPointZ];
