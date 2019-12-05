@@ -6,12 +6,15 @@ import AssetsImport from './assetsImport';
 import Ball from './ball';
 import Vec3 from './vector3D';
 import CuePool from './cue';
+import PhysicsLoop  from './physicsLoop';
 
 
 const mainCanvas = document.querySelector("#mainRender");
 // console.log(mainCanvas);
 
 const engine = new BABYLON.Engine(mainCanvas, true, {preserveDrawingBuffer: true, stencil: true});
+
+const physicsLoop = new PhysicsLoop();
 let controlsMap = {};
 
 const createScene = ()=>{
@@ -33,9 +36,7 @@ const createScene = ()=>{
     BALL_SYSTEM.createBall(0,0, scene);
     camera.attachControl(mainCanvas, true);
     camera.inputs.attached.keyboard.detachControl();
-    camera.setPosition(new BABYLON.Vector3(0, 80, 20));
-
-    
+    camera.setPosition(new BABYLON.Vector3(0, 80, 20));    
     new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
     return scene;
 }
@@ -60,7 +61,7 @@ function initializeActionHandler(scene, cue,camera){
 
     scene.onBeforeRenderObservable.add(()=>{
         cue.checkControl(controlsMap);
-        // cue.checkCameraPosition(camera);
+        physicsLoop.checkCollisions();
     });
 }
 
