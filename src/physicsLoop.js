@@ -1,4 +1,5 @@
 import { AABBCollider } from "./collider";
+import { Vector3 } from "babylonjs";
 
 let colliders = [];
 /**
@@ -22,6 +23,11 @@ export default class PhysicsLoop{
  
     updatePositionCollider(index, position){
         this.colliders[index].position = position;
+        if(this.colliders[index].colBox != null){
+            console.log("colbox: ",this.colliders[index].colBox);
+            this.colliders[index].colBox.position = new Vector3(position.x, position.y, position.z);
+        }
+            
     }
 
 

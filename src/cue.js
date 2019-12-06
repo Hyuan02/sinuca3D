@@ -1,20 +1,35 @@
-import { Vector3, Matrix, VertexBuffer } from "babylonjs";
+import { Vector3, Matrix, VertexBuffer, MeshBuilder } from "babylonjs";
 import PhysicsLoop from './physicsLoop';
 import {AABBCollider} from './collider';
 import Vec3 from "./vector3D";
 const SPEED = 5;
 export default class CuePool{
-    constructor(cueMesh){
+    constructor(cueMesh, scene){
         this.mesh = cueMesh;
         ([this.maxPointX, this.maxPointY, this.maxPointZ, 
         this.minPointX, this.minPointY, this.minPointZ] = AABBCollider.forceBrutePoints(this.mesh.getVerticesData(VertexBuffer.PositionKind)));
         this.mesh.setPivotPoint(new Vector3(this.maxPointX, this.maxPointY, this.maxPointZ));
         this.moveMode = false;
         this.pLoop = new PhysicsLoop();
+        //debug purpose
+        let pointsBox = [
+            new Vector3(this.minPointX, 0, this.maxPointZ),
+            new Vector3(this.maxPointX, 0, this.maxPointZ),
+            new Vector3(this.maxPointX, 0, this.minPointZ),
+            new Vector3(this.minPointX, 0, this.minPointZ),
+        ]
+        
         this.colliderID = this.pLoop.updateColliders(new AABBCollider(
             new Vec3(this.minPointX, this.minPointY, this.minPointZ),
-            new Vec3(this.maxPointX, this.maxPointY, this.maxPointZ)
+            new Vec3(this.maxPointX, this.maxPointY, this.maxPointZ),
+            this.position,
+            MeshBuilder.CreateLines("lines", {points: pointsBox}, scene)    
         ));
+
+        
+
+        this.position = new Vec3(0,20,0);
+        
     }
 
     set position(vec3){

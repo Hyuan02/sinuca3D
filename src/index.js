@@ -14,6 +14,7 @@ const mainCanvas = document.querySelector("#mainRender");
 
 const engine = new BABYLON.Engine(mainCanvas, true, {preserveDrawingBuffer: true, stencil: true});
 
+
 const physicsLoop = new PhysicsLoop();
 let controlsMap = {};
 
@@ -24,9 +25,9 @@ const createScene = ()=>{
     AssetsImport.importPool(scene);
     let cue;
     AssetsImport.importCue(scene).then((value)=>{
-        cue = new CuePool(value);
+        cue = new CuePool(value, scene);
         cue.position = new Vec3(120,20,95);
-        cue.rotation = new Vec3(0,180,0);
+        cue.rotation = new Vec3(0,0,0);
     }).then(()=>{
         initializeActionHandler(scene, cue, camera);
     });

@@ -10,10 +10,12 @@ export class SphereCollider{
 
 export class AABBCollider{
 
-    constructor(min, max, position){
+    constructor(min, max, position, colBox){
         this.min = min;
         this.max = max;
         this.position = position;
+        this.colBox = colBox;
+        console.log(colBox);
     }
 
 
