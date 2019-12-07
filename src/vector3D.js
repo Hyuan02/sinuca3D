@@ -95,11 +95,10 @@ export default class Vec3 {
         return new Vec3(this.x*num, this.y*num, this.z*num);
      }
 
-    // dot(vector){
-    //     const norm_vec = this.norm();
 
-
-    // }
+    dot(vector){
+        return (this.x * vector.x) + (this.y * vector.y) + (this.z * vector.z);
+     }
     
     
 }

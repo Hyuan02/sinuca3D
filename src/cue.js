@@ -1,6 +1,6 @@
 import { Vector3, Matrix, VertexBuffer, MeshBuilder } from "babylonjs";
 import PhysicsLoop from './physicsLoop';
-import {AABBCollider} from './collider';
+import {AABBCollider, utilFunctions, OBBCollider} from './collider';
 import Vec3 from "./vector3D";
 const SPEED = 5;
 export default class CuePool{
@@ -26,8 +26,8 @@ export default class CuePool{
             MeshBuilder.CreateLines("lines", {points: pointsBox}, scene)    
         ));
 
-        
-
+        // let obb = new OBBCollider();
+        console.log(OBBCollider.minContainingArea(utilFunctions.valuesToVectors(this.mesh.getVerticesData(VertexBuffer.PositionKind))));
         this.position = new Vec3(0,20,0);
         
     }
