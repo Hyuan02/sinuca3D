@@ -14,14 +14,14 @@ export default class CuePool{
         this.moveMode = false;
         this.pLoop = new PhysicsLoop();
         this.collider = OBBCollider.minContainingArea(UtilFunctions.valuesToVectors(this.mesh.getVerticesData(VertexBuffer.PositionKind)));
+        this.collider.parent = this;
         this.mesh.position = new Vector3(0,20,0);
         // this.mesh.rotation = new Vector3(0,0,0); 
         this.rotation = new Vec2(0,0);
         this.pLoop.updateColliders(this.collider);
         this.collider.originalPivot = new Vec2(this.minPointX, this.minPointZ);
-    
-        this.lines = BABYLON.MeshBuilder.CreateLines("lines", {points: this.generateLines(), updatable: true}, scene);
-
+        // this.lines = BABYLON.MeshBuilder.CreateLines("lines", {points: this.generateLines(), updatable: true}, scene);
+        this.position = new Vec2(0,-155);
 
     }
 
@@ -33,7 +33,7 @@ export default class CuePool{
     }
 
     set rotation(vec2){
-        console.log("vec2: ", vec2);
+        // console.log("vec2: ", vec2);
         this.mesh.rotation = new Vector3(vec2.x, vec2.z, this.mesh.rotation.z);
         this.applyTransformation();
     }
@@ -110,18 +110,18 @@ export default class CuePool{
         let rotation = this.rotation;
 
 
-        console.log("Pivot point: ", this.mesh.getAbsolutePivotPoint());
+        // console.log("Pivot point: ", this.mesh.getAbsolutePivotPoint());
         this.collider.axis[0] = this.collider.originalAxis[0].applyPositiveRotation(-this.rotation.z); //ROTAÇÃO DO EIXO U
         this.collider.axis[1] = this.collider.originalAxis[1].applyPositiveRotation(-this.rotation.z); // ROTAÇÃO DO EIXO V
 
         this.collider.position = this.collider.originalPivot; // PEGO O PIVO ORIGINAL 
-        console.log("originalPivot: ", this.collider.originalPivot); // DEBUG DO PIVOT ORIGINAL 
+        // console.log("originalPivot: ", this.collider.originalPivot); // DEBUG DO PIVOT ORIGINAL 
 
         // console.log("extents: ", this.collider.extents.x);
         // console.log("operation: ", this.collider.axis[0].mulEs(this.collider.extents.z));
         let rotatedPivot = this.collider.position.applyPositiveRotation(this.rotation.z); //APLICO A ROTACAO NO PIVOT ORIGINAL 
 
-        console.log("rotatedPivot: ", rotatedPivot); //VEJO COM O VETOR APLICADO DA ROTAÇÃO
+        // console.log("rotatedPivot: ", rotatedPivot); //VEJO COM O VETOR APLICADO DA ROTAÇÃO
 
 
         let centerPivot = rotatedPivot.sum(this.collider.axis[0].mulEs(this.collider.extents.x)); //SOMO O PIVOT ORIGINAL + EIXO U * OS EXTENTS.Z (TA SERVINDO COMO O Y)
@@ -130,7 +130,7 @@ export default class CuePool{
 
         centerPivot = centerPivot.sum(new Vec2(0, this.maxPointZ));
 
-        console.log("centerPivot: ", centerPivot);  //DEBUGO
+        // console.log("centerPivot: ", centerPivot);  //DEBUGO
 
         // this.collider.axis = Array.from(this.collider.originalAxis);
 
@@ -141,9 +141,9 @@ export default class CuePool{
         this.collider.position = centerPivot.sum(this.position); //SOMO O VETOR CALCULADO COM A POSICAO 
         
         // updates the existing instance of lines : no need for the parameter scene here
-        this.lines = BABYLON.MeshBuilder.CreateLines("lines", {points: this.generateLines(), instance: this.lines});
+        // this.lines = BABYLON.MeshBuilder.CreateLines("lines", {points: this.generateLines(), instance: this.lines});
 
-        console.log("position: ", this.collider.position);
+        // console.log("position: ", this.collider.position);
     }
     
 

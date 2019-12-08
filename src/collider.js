@@ -2,10 +2,11 @@ import Vec3 from "./vector3D";
 import Vec2 from "./vector2D";
 
 export class SphereCollider{
-    constructor(center, radius){
+    constructor(center, radius, parent){
         this.center = center;
         this.radius = radius;
-        this.position;
+        this.position = new Vec2(0,0);
+        this.parent = parent;
     }
 
     static containingCircle(points){
@@ -27,6 +28,20 @@ export class SphereCollider{
         console.log(circle);
         
         return circle;
+    }
+
+
+    static applyForceBalls(sphere1, sphere2, movement1, movement2){
+        let distance = sphere1.position.sub(sphere2.position).norm();
+        let a1 = movement1.dot(distance);
+        let a2 = movement2.dot(distance);
+
+        let calc = a1-a2;
+
+        movement1 = movement1.sub(distance.mulEs(calc));
+        movement2 = movement2.sum(distance.mulEs(calc));
+
+        return {movement1, movement2};
     }
 
 }
@@ -73,7 +88,7 @@ export class AABBCollider{
 
 export class OBBCollider{
 
-    constructor(center, extents, axis){
+    constructor(center, extents, axis, parent){
         this.center = center; 
         this.extents = extents; 
         this.axis = axis;
@@ -81,6 +96,7 @@ export class OBBCollider{
         this.originalAxis = Array.from(axis);
         this.originalPivot = new Vec2();
         this.debugBox;
+        this.parent = parent;
     }
 
 
@@ -131,7 +147,7 @@ export class OBBCollider{
 
 
     static checkOBBToSphereOverlap(circle, rectangle){
-        let d = circle.center.sub(rectangle.position);
+        let d = circle.position.sub(rectangle.position);
         let q = rectangle.position;
         let e = Object.values(rectangle.extents);
 
@@ -145,7 +161,7 @@ export class OBBCollider{
            q = q.sum(rectangle.axis[i].mulEs(distance));
         }
 
-        let v = q.sub(circle.center);
+        let v = q.sub(circle.position);
         
 
         return v.dot(v) <= (circle.radius * circle.radius);

@@ -47,8 +47,8 @@ export default class Vec2{
      * @returns Vec2
      * @memberof Vec2
      */
-    div(vector){
-        return new Vec2(this.x/vector.x, this.z/vector.z);
+    div(number){
+        return new Vec2(this.x/number, this.z/number);s
     }
 
 

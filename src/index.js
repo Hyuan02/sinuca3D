@@ -59,6 +59,7 @@ function initializeActionHandler(scene, cue,camera){
     scene.onBeforeRenderObservable.add(()=>{
         cue.checkControl(controlsMap);
         physicsLoop.checkCollisions();
+        physicsLoop.checkMovements();
     });
 }
 

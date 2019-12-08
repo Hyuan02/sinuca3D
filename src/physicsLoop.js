@@ -1,5 +1,8 @@
 import { AABBCollider, OBBCollider, SphereCollider } from "./collider";
-import { Vector3 } from "babylonjs";
+import {Vector3} from "babylonjs";
+import Vec2 from "./vector2D";
+// import Ball from "./ball";
+import BallsController from "./ballsController";
 
 let colliders = [];
 /**
@@ -11,6 +14,7 @@ let colliders = [];
 export default class PhysicsLoop{
     constructor(){
         this.colliders = colliders;
+        this.ballsController = new BallsController();
     }
 
 
@@ -51,12 +55,22 @@ export default class PhysicsLoop{
         }
 
         else if(element instanceof OBBCollider && secondElement instanceof SphereCollider){
-            console.log(OBBCollider.checkOBBToSphereOverlap(secondElement, element));
+            if(OBBCollider.checkOBBToSphereOverlap(secondElement, element)){
+                if(secondElement instanceof SphereCollider){
+                    secondElement.parent.movement = new Vec2(0,1);
+                }
+            }
         }
 
         // else if(element instanceof SphereCollider && secondElement instanceof OBBCollider){
         //     console.log(OBBCollider.checkOBBToSphereOverlap(element, secondElement));
         // }
+    }
+
+    checkMovements(){
+        this.ballsController.balls.forEach(e=>{
+            e.applyMovement();
+        });
     }
 }
 
