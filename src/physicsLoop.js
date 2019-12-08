@@ -1,4 +1,4 @@
-import { AABBCollider } from "./collider";
+import { AABBCollider, OBBCollider, SphereCollider } from "./collider";
 import { Vector3 } from "babylonjs";
 
 let colliders = [];
@@ -24,7 +24,6 @@ export default class PhysicsLoop{
     updatePositionCollider(index, position){
         this.colliders[index].position = position;
         if(this.colliders[index].colBox != null){
-            console.log("colbox: ",this.colliders[index].colBox);
             this.colliders[index].colBox.position = new Vector3(position.x, position.y, position.z);
         }
             
@@ -48,8 +47,16 @@ export default class PhysicsLoop{
 
     checkIndividualCollision(element, secondElement){
         if(element instanceof AABBCollider && secondElement instanceof AABBCollider){
-            console.log(AABBCollider.checkAABBOverlap(element, secondElement));
+            // console.log(AABBCollider.checkAABBOverlap(element, secondElement));
         }
+
+        else if(element instanceof OBBCollider && secondElement instanceof SphereCollider){
+            console.log(OBBCollider.checkOBBToSphereOverlap(secondElement, element));
+        }
+
+        // else if(element instanceof SphereCollider && secondElement instanceof OBBCollider){
+        //     console.log(OBBCollider.checkOBBToSphereOverlap(element, secondElement));
+        // }
     }
 }
 

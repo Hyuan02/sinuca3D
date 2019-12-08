@@ -1,10 +1,11 @@
 import * as BABYLON from 'babylonjs';
-import { AABBCollider } from './collider';
+import { AABBCollider, UtilFunctions, SphereCollider } from './collider';
 import PhysicsLoop from './physicsLoop';
 import Vec3 from './vector3D';
+import BallsController from './ballsController';
+import Vec2 from './vector2D';
 
 const SIZE_BALL = 3;
-var balls = [];
 
 
 
@@ -15,9 +16,10 @@ var balls = [];
  * @class Ball
  */
 export default class Ball{
-    constructor(){
-        balls = [];
-        this.balls = balls;
+    constructor(mesh, position, collider){
+        this.position = position;
+        this.collider = collider;
+        this.mesh = mesh;
     }
 
 
@@ -30,20 +32,17 @@ export default class Ball{
      * @returns Ball
      * @memberof Ball
      */
-    createBall(x,z, scene){
-        let ball = new BABYLON.MeshBuilder.CreateSphere('ball' + balls.length, {diameter:SIZE_BALL}, scene);
-        ball.position.x = x;
-        ball.position.y = 20;
-        ball.position.z = z;
-        let p1 = new PhysicsLoop();
-        console.log(ball);
-        let vector = AABBCollider.forceBrutePoints(ball.getVerticesData(BABYLON.VertexBuffer.PositionKind));
-        p1.updateColliders(new AABBCollider(new Vec3(vector[3],vector[4], vector[5]),
-        new Vec3(vector[0], vector[1], vector[2]), 
-        new Vec3(ball.position.x, ball.position.y, ball.position.z)));
-        
-        this.balls.push(ball);
-        // console.log(ball);
-        return ball;
+    static createBall(x,z, scene){
+        let ballsController = new BallsController();
+        let mesh = new BABYLON.MeshBuilder.CreateSphere('ball' + ballsController.balls.length, {diameter:SIZE_BALL}, scene);
+        mesh.position.x = x;
+        mesh.position.y = 20;
+        mesh.position.z = z;
+        let points = UtilFunctions.valuesToVectors(mesh.getVerticesData(BABYLON.VertexBuffer.PositionKind));
+        let collider = SphereCollider.containingCircle(points);
+        let ball = new Ball(mesh, new Vec2(mesh.position.x, mesh.position.z), collider);
+        ballsController.balls.push(ball);
+        let pLoop = new PhysicsLoop();
+        pLoop.updateColliders(collider);
     }
 }

@@ -20,21 +20,17 @@ let controlsMap = {};
 
 const createScene = ()=>{
     const scene = new BABYLON.Scene(engine);
-    const BALL_SYSTEM = new Ball();
-    // console.log(BALL_SYSTEM.balls);
     AssetsImport.importPool(scene);
     let cue;
     AssetsImport.importCue(scene).then((value)=>{
         cue = new CuePool(value, scene);
-        cue.position = new Vec3(120,20,95);
-        cue.rotation = new Vec3(0,0,0);
     }).then(()=>{
         initializeActionHandler(scene, cue, camera);
     });
 
     
     var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 10, new BABYLON.Vector3(0, 0, 0), scene);
-    BALL_SYSTEM.createBall(0,0, scene);
+    Ball.createBall(0,0, scene);
     camera.attachControl(mainCanvas, true);
     camera.inputs.attached.keyboard.detachControl();
     camera.setPosition(new BABYLON.Vector3(0, 80, 20));    
