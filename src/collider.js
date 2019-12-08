@@ -79,6 +79,8 @@ export class OBBCollider{
         this.axis = axis;
         this.position = new Vec2();
         this.originalAxis = Array.from(axis);
+        this.originalPivot = new Vec2();
+        this.debugBox;
     }
 
 

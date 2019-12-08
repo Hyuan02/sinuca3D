@@ -96,9 +96,9 @@ export default class Vec2{
 
      applyPositiveRotation(ang){
         let cosAng = Math.cos(ang);
-        console.log("cosAng: ", cosAng);
+        // console.log("cosAng: ", cosAng);
         let sinAng = Math.sin(ang);
-        console.log("sinAng: ", cosAng);
+        // console.log("sinAng: ", cosAng);
         let result1 = this.x * cosAng - this.z * sinAng;
         let result2 = this.x * sinAng + this.z * cosAng;
         return new Vec2(result1, result2);
