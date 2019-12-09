@@ -9,7 +9,7 @@ export default class CuePool{
         this.mesh = cueMesh;
         // this.mesh.rotation = new Vector3(Math.PI,0,0);
         ([this.maxPointX, this.maxPointY, this.maxPointZ, 
-        this.minPointX, this.minPointY, this.minPointZ] = AABBCollider.forceBrutePoints(this.mesh.getVerticesData(VertexBuffer.PositionKind)));
+        this.minPointX, this.minPointY, this.minPointZ] = UtilFunctions.forceBrutePoints(this.mesh.getVerticesData(VertexBuffer.PositionKind)));
         this.mesh.setPivotPoint(new Vector3(this.maxPointX, this.maxPointY, this.maxPointZ));
         this.moveMode = false;
         this.pLoop = new PhysicsLoop();

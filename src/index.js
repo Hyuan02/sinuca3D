@@ -7,6 +7,7 @@ import Ball from './ball';
 import Vec3 from './vector3D';
 import CuePool from './cue';
 import PhysicsLoop  from './physicsLoop';
+import Pool from './pool';
 
 
 const mainCanvas = document.querySelector("#mainRender");
@@ -20,7 +21,11 @@ let controlsMap = {};
 
 const createScene = ()=>{
     const scene = new BABYLON.Scene(engine);
-    AssetsImport.importPool(scene);
+    let pool;
+    AssetsImport.importPool(scene).then((value)=>{
+        pool = new Pool(value);
+        pool.generateWallColliders(scene);
+    });
     let cue;
     AssetsImport.importCue(scene).then((value)=>{
         cue = new CuePool(value, scene);

@@ -31,7 +31,11 @@ export default class AssetsImport{
      * @memberof AssetsImport
      */
     static importPool(scene){
-        return new BABYLON.SceneLoader.AppendAsync(ASSETS_FOLDER+POOL_FOLDER,POOL_FILE, scene, (err, scene)=>{ 
+        return new Promise ((resolve, reject)=>{
+            BABYLON.SceneLoader.LoadAssetContainer(ASSETS_FOLDER+POOL_FOLDER,POOL_FILE, scene, (container)=>{
+                container.addAllToScene();
+                resolve(container.meshes[0]); 
+            });
         });
     }
 

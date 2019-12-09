@@ -62,6 +62,10 @@ export default class PhysicsLoop{
             }
         }
 
+        else if(element instanceof AABBCollider && secondElement instanceof SphereCollider){
+            console.log(AABBCollider.checkAABBSphereOverlap(element,secondElement));
+        }
+
         // else if(element instanceof SphereCollider && secondElement instanceof OBBCollider){
         //     console.log(OBBCollider.checkOBBToSphereOverlap(element, secondElement));
         // }
