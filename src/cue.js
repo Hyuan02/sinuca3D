@@ -22,6 +22,10 @@ export default class CuePool{
         this.collider.originalPivot = new Vec2(this.minPointX, this.minPointZ);
         // this.lines = BABYLON.MeshBuilder.CreateLines("lines", {points: this.generateLines(), updatable: true}, scene);
         this.position = new Vec2(0,-155);
+        this.shootMode = false;
+        this.origin = this.position;
+        this.power = new Vec2(0,0);
+
 
     }
 
@@ -55,20 +59,6 @@ export default class CuePool{
 
     checkControl(inputMap){
         if(this.moveMode){
-            if(inputMap["w"] || inputMap["ArrowUp"]){
-                this.position = this.position.sum(new Vec2(0,1));
-
-            } 
-            if(inputMap["a"] || inputMap["ArrowLeft"]){
-                this.position = this.position.sum(new Vec2(-1,0));
-            } 
-            if(inputMap["s"] || inputMap["ArrowDown"]){
-                this.position = this.position.sum(new Vec2(0,-1));
-            } 
-            if(inputMap["d"] || inputMap["ArrowRight"]){
-                this.position = this.position.sum(new Vec2(1,0));
-            }
-            
             if(inputMap["q"]){
                 this.rotation = this.rotation.sum(new Vec2(0,-1).mulEs(0.01));
             }
@@ -88,6 +78,22 @@ export default class CuePool{
             if(inputMap["3"]){
                 this.rotation = new Vec2(0,Math.PI + Math.PI/2);
             }
+
+            if(inputMap[" "]){
+                this.shootMode = true;
+                this.shootBall();
+            }
+            else{
+                if(this.shootMode){
+                    this.position = this.origin;
+                    this.shootMode = false;
+                    this.applyCueForce();
+                }
+                else{
+                    this.origin = this.position;
+                }
+            }
+            
         }
         else{
             if(inputMap["r"]){
@@ -153,5 +159,24 @@ export default class CuePool{
         let point3 = this.collider.position.sum(this.collider.axis[0].mulEs(this.collider.extents.x).sub(this.collider.axis[1].mulEs(this.collider.extents.z)));
         let point4 = this.collider.position.sub(this.collider.axis[0].mulEs(this.collider.extents.x).sub(this.collider.axis[1].mulEs(this.collider.extents.z)));
         return [new Vector3(point1.x, 25, point1.z), new Vector3(point3.x, 25, point3.z), new Vector3(point2.x, 25, point2.z), new Vector3(point4.x, 25, point4.z)]
+    }
+
+    shootBall(){
+        let calc = new Vec2(0,-2).applyPositiveRotation(-this.rotation.z);
+        this.position = this.position.sum(calc);
+        this.power = this.power.sum(calc.mulEs(-0.1));
+    }
+
+    updatePosition(ball){
+        if(ball.movement.x == 0 && ball.movement.z == 0){
+            if(!this.shootMode && this.power.x == 0 && this.power.z == 0){
+                let calc = new Vec2(0,2.2).applyPositiveRotation(-this.rotation.z).sum(new Vec2(0,this.maxPointZ));
+                this.position = ball.position.sub(calc);
+            }
+        }     
+    }
+
+    applyCueForce(){
+        this.position = this.position.sum(this.power);
     }
 }

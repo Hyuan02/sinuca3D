@@ -17,11 +17,12 @@ const SIZE_BALL = 3;
  * @class Ball
  */
 export default class Ball{
-    constructor(mesh, position, collider){
+    constructor(mesh, position, collider, whiteBall){
         this.mesh = mesh;
         this.collider = collider;
         this.position = position;
         this.movement = new Vec2(0,0);
+        this.whiteBall = whiteBall;
     }
 
 
@@ -34,7 +35,7 @@ export default class Ball{
      * @returns Ball
      * @memberof Ball
      */
-    static createBall(x,z, scene){
+    static createBall(x,z, scene, whiteBall = false){
         let ballsController = new BallsController();
         let mesh = new BABYLON.MeshBuilder.CreateSphere('ball' + ballsController.balls.length, {diameter:SIZE_BALL}, scene);
         mesh.position.x = x;
@@ -42,11 +43,14 @@ export default class Ball{
         mesh.position.z = z;
         let points = UtilFunctions.valuesToVectors(mesh.getVerticesData(BABYLON.VertexBuffer.PositionKind));
         let collider = SphereCollider.containingCircle(points);
-        let ball = new Ball(mesh, new Vec2(mesh.position.x, mesh.position.z), collider);
+        let ball = new Ball(mesh, new Vec2(mesh.position.x, mesh.position.z), collider, whiteBall);
+        if(whiteBall)
+            ballsController.whiteBall = ball;
         collider.parent = ball;
-        ballsController.balls.push(ball);
+        ballsController.updateBalls(ball);
         let pLoop = new PhysicsLoop();
         pLoop.updateColliders(collider);
+        return ball;
     }
 
 
@@ -60,7 +64,7 @@ export default class Ball{
         this.mesh.position = new Vector3(vec2.x, this.mesh.position.y, vec2.z);
         this.collider.position = vec2;
     }
-    
+
     applyMovement(){
         this.position = this.position.sum(this.movement);
         this.applyFriction();
@@ -69,11 +73,14 @@ export default class Ball{
 
     applyFriction(){
         // console.log(this.movement);
-        if(this.movement.x > 0 || this.movement.z > 0){
-            this.movement = this.movement.sub(new Vec2(0,0.03));
+        if(this.movement.x >= 0.1 || this.movement.z > 0.1){
+            this.movement = this.movement.mulEs(0.98);
+        }
+        else if(this.movement.x < -0.1 || this.movement.z < -0.1){
+           this.movement = this.movement.mulEs(0.98);
         }
         else{
-           this.movement = new Vec2(0,0); 
+            this.movement = new Vec2(0,0);
         }
     }
 
@@ -81,11 +88,29 @@ export default class Ball{
         if(this.movement.x > 0 || this.movement.z > 0){
             let rot =  this.movement.div(SIZE_BALL);
             this.mesh.rotation = new Vector3(this.mesh.rotation.x + rot.x, this.mesh.rotation.y + rot.z, this.mesh.rotation.z + 0.08);
-            console.log(this.mesh.rotation);
+            // console.log(this.mesh.rotation);
+        }
+    }
+
+
+    verifyMousePosition(pointerX, pointerY, cue){
+        if(this.whiteBall){
+            cue.position = this.position.sum(new Vec2(0, -cue.maxPointZ).mulEs(1.02));
+                        
+            let opposite = pointerY - (cue.position.z);
+            let adjacent = pointerX - (cue.position.x);
+
+            let rot = Math.atan2(opposite, adjacent);
+
+            console.log(rot);
+
+            cue.rotation = new Vec2(0, rot);
+            
+
         }
     }
 
 
 
-    
+
 }

@@ -89,10 +89,14 @@ export default class Vec2{
         return (this.x * vector.x) + (this.z * vector.z);
      }
 
-
-     applyNegativeRotation(){
-        
+     proj(vector){
+         return vector.mulEs(this.dot(vector)/vector.dot(vector));
      }
+
+     slide(vector){
+         return this.sub(this.proj(vector));
+     }
+
 
      applyPositiveRotation(ang){
         let cosAng = Math.cos(ang);

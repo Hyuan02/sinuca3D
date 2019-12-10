@@ -8,6 +8,7 @@ import Vec3 from './vector3D';
 import CuePool from './cue';
 import PhysicsLoop  from './physicsLoop';
 import Pool from './pool';
+import BallsController from './ballsController';
 
 
 const mainCanvas = document.querySelector("#mainRender");
@@ -30,15 +31,25 @@ const createScene = ()=>{
     AssetsImport.importCue(scene).then((value)=>{
         cue = new CuePool(value, scene);
     }).then(()=>{
-        initializeActionHandler(scene, cue, camera);
+
+        let whiteBall = Ball.createBall(0,0, scene, true);
+        let ballsController = new BallsController();
+        console.log(ballsController);
+        initializeActionHandler(scene, cue, camera, whiteBall);
+        // window.addEventListener("mousemove", function (event) {
+        //     ballsController.whiteBall.verifyMousePosition(scene.pointerX, scene.pointerY, cue);
+        // });
     });
 
     
     var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 10, new BABYLON.Vector3(0, 0, 0), scene);
-    Ball.createBall(0,0, scene);
+    Ball.createBall(0,0, scene, true);
     camera.attachControl(mainCanvas, true);
     camera.inputs.attached.keyboard.detachControl();
-    camera.setPosition(new BABYLON.Vector3(0, 80, 20));    
+    camera.setPosition(new BABYLON.Vector3(20, 100, 0));
+
+  
+    // camera.rotation = new BABYLON.Vector3(Math.PI,0, 0);    
     new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
     return scene;
 }
@@ -52,7 +63,7 @@ engine.runRenderLoop(function(){
 });
 
 
-function initializeActionHandler(scene, cue,camera){
+function initializeActionHandler(scene, cue,camera, ball){
     scene.actionManager = new BABYLON.ActionManager(scene);
     scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, (evt)=> {								
         controlsMap[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
@@ -63,6 +74,7 @@ function initializeActionHandler(scene, cue,camera){
 
     scene.onBeforeRenderObservable.add(()=>{
         cue.checkControl(controlsMap);
+        cue.updatePosition(ball);
         physicsLoop.checkCollisions();
         physicsLoop.checkMovements();
     });
