@@ -162,9 +162,11 @@ export default class CuePool{
     }
 
     shootBall(){
-        let calc = new Vec2(0,-2).applyPositiveRotation(-this.rotation.z);
-        this.position = this.position.sum(calc);
-        this.power = this.power.sum(calc.mulEs(-0.1));
+        if(this.power.mag() < 5){
+            let calc = new Vec2(0,-2).applyPositiveRotation(-this.rotation.z);
+            this.position = this.position.sum(calc);
+            this.power = this.power.sum(calc.mulEs(-0.1));
+        }
     }
 
     updatePosition(ball){
