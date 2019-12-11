@@ -15,7 +15,7 @@ export default class CuePool{
         this.pLoop = new PhysicsLoop();
         this.collider = OBBCollider.minContainingArea(UtilFunctions.valuesToVectors(this.mesh.getVerticesData(VertexBuffer.PositionKind)));
         this.collider.parent = this;
-        this.mesh.position = new Vector3(0,20,0);
+        this.mesh.position = new Vector3(0,22,0);
         this.rotation = new Vec2(0,0);
         this.pLoop.updateColliders(this.collider);
         this.collider.originalPivot = new Vec2(this.minPointX, this.minPointZ);

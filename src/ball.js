@@ -10,6 +10,7 @@ const SIZE_BALL = 3;
 
 
 
+
 /**
  * Represents the instance of a ball.
  *

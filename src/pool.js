@@ -102,7 +102,7 @@ export default class Pool{
         });
 
         this.disableColliders();
-        this.enableColliders();
+        // this.enableColliders();
     }
 
 

@@ -55,7 +55,7 @@ export default class PhysicsLoop{
         }
 
         else if(element instanceof OBBCollider && secondElement instanceof SphereCollider){
-            if(element.parent.active){
+            if(element.parent.active && secondElement.parent.whiteBall){
                 if(OBBCollider.checkOBBToSphereOverlap(secondElement, element)){
                     if(secondElement instanceof SphereCollider){
                         element.parent.power = new Vec2(0,0);

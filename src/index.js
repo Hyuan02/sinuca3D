@@ -32,6 +32,9 @@ const createScene = () => {
             cue = new CuePool(value, scene);
         }).then(() => {
             let whiteBall = Ball.createBall(0, 0, scene, true);
+            let material = new BABYLON.StandardMaterial("whiteBall", scene);
+            material.diffuseColor = BABYLON.Color3.White();
+            whiteBall.mesh.material = material;
             initializeActionHandler(scene, cue, camera, whiteBall);
             camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 10, new BABYLON.Vector3(0, 0, 0), scene);
             camera.attachControl(mainCanvas, true);
@@ -48,7 +51,7 @@ const createScene = () => {
 createScene().then((scene) => {
     SCENE = scene;
     let ballsController = new BallsController();
-    console.log(ballsController.balls);
+    ballsController.instantiate8Balls(scene);
     addObservable(() => {
         if (ballsController.checkBallsAction()) {
             cue.disableCue(SCENE);
