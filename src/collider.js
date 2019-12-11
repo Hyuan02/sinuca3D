@@ -2,10 +2,11 @@ import Vec3 from "./vector3D";
 import Vec2 from "./vector2D";
 
 export class SphereCollider{
-    constructor(center, radius, parent){
+    constructor(center, radius, parent, position = null){
         this.center = center;
         this.radius = radius;
-        this.position = new Vec2(0,0);
+        this.position = position==null ? new Vec2(0,0) : position;
+        console.log(this.position);
         this.parent = parent;
     }
 
@@ -44,6 +45,9 @@ export class SphereCollider{
         return {movement1, movement2};
     }
 
+    static checkCircleOverlap(sphere1, sphere2) {
+       return sphere1.position.sub(sphere2.position).mag() < sphere1.radius + sphere2.radius;
+    }
 }
 
 

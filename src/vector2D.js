@@ -59,7 +59,9 @@ export default class Vec2{
      * @memberof Vec2
      */
     mag(){
-        return Math.sqrt(Math.pow(this.x,2) + Math.pow(this.z, 2));
+        let a = Math.pow(this.x,2);
+        let b = Math.pow(this.z, 2);
+        return Math.sqrt(a+b);
     }
 
 

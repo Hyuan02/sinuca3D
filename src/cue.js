@@ -1,4 +1,4 @@
-import { Vector3, Matrix, VertexBuffer, MeshBuilder } from "babylonjs";
+import { Vector3, Matrix, VertexBuffer, MeshBuilder, StandardMaterial } from "babylonjs";
 import PhysicsLoop from './physicsLoop';
 import {AABBCollider, UtilFunctions, OBBCollider} from './collider';
 import Vec3 from "./vector3D";
@@ -8,7 +8,7 @@ export default class CuePool{
     constructor(cueMesh, scene){
         this.mesh = cueMesh;
         // this.mesh.rotation = new Vector3(Math.PI,0,0);
-        ([this.maxPointX, this.maxPointY, this.maxPointZ, 
+        ([this.maxPointX, this.maxPointY, this.maxPointZ,
         this.minPointX, this.minPointY, this.minPointZ] = UtilFunctions.forceBrutePoints(this.mesh.getVerticesData(VertexBuffer.PositionKind)));
         this.mesh.setPivotPoint(new Vector3(this.maxPointX, this.maxPointY, this.maxPointZ));
         this.moveMode = false;
@@ -16,17 +16,15 @@ export default class CuePool{
         this.collider = OBBCollider.minContainingArea(UtilFunctions.valuesToVectors(this.mesh.getVerticesData(VertexBuffer.PositionKind)));
         this.collider.parent = this;
         this.mesh.position = new Vector3(0,20,0);
-        // this.mesh.rotation = new Vector3(0,0,0); 
         this.rotation = new Vec2(0,0);
         this.pLoop.updateColliders(this.collider);
         this.collider.originalPivot = new Vec2(this.minPointX, this.minPointZ);
-        // this.lines = BABYLON.MeshBuilder.CreateLines("lines", {points: this.generateLines(), updatable: true}, scene);
         this.position = new Vec2(0,-155);
         this.shootMode = false;
         this.origin = this.position;
         this.power = new Vec2(0,0);
-
-
+        this.active = true;
+        this.defaultMaterial = this.mesh.material;
     }
 
     set position(vec2){
@@ -93,7 +91,7 @@ export default class CuePool{
                     this.origin = this.position;
                 }
             }
-            
+
         }
         else{
             if(inputMap["r"]){
@@ -109,7 +107,7 @@ export default class CuePool{
         this.position = new Vec3(camera.position.x, this.position.y, camera.position.z);
     }
 
-    
+
 
     applyTransformation(){
         let position = this.position;
@@ -120,12 +118,12 @@ export default class CuePool{
         this.collider.axis[0] = this.collider.originalAxis[0].applyPositiveRotation(-this.rotation.z); //ROTAÇÃO DO EIXO U
         this.collider.axis[1] = this.collider.originalAxis[1].applyPositiveRotation(-this.rotation.z); // ROTAÇÃO DO EIXO V
 
-        this.collider.position = this.collider.originalPivot; // PEGO O PIVO ORIGINAL 
-        // console.log("originalPivot: ", this.collider.originalPivot); // DEBUG DO PIVOT ORIGINAL 
+        this.collider.position = this.collider.originalPivot; // PEGO O PIVO ORIGINAL
+        // console.log("originalPivot: ", this.collider.originalPivot); // DEBUG DO PIVOT ORIGINAL
 
         // console.log("extents: ", this.collider.extents.x);
         // console.log("operation: ", this.collider.axis[0].mulEs(this.collider.extents.z));
-        let rotatedPivot = this.collider.position.applyPositiveRotation(this.rotation.z); //APLICO A ROTACAO NO PIVOT ORIGINAL 
+        let rotatedPivot = this.collider.position.applyPositiveRotation(this.rotation.z); //APLICO A ROTACAO NO PIVOT ORIGINAL
 
         // console.log("rotatedPivot: ", rotatedPivot); //VEJO COM O VETOR APLICADO DA ROTAÇÃO
 
@@ -144,14 +142,14 @@ export default class CuePool{
 
         // let rotatedPosition = this.position.applyPositiveRotation(-this.rotation.z);
 
-        this.collider.position = centerPivot.sum(this.position); //SOMO O VETOR CALCULADO COM A POSICAO 
-        
+        this.collider.position = centerPivot.sum(this.position); //SOMO O VETOR CALCULADO COM A POSICAO
+
         // updates the existing instance of lines : no need for the parameter scene here
         // this.lines = BABYLON.MeshBuilder.CreateLines("lines", {points: this.generateLines(), instance: this.lines});
 
         // console.log("position: ", this.collider.position);
     }
-    
+
 
     generateLines(){
         let point1 = this.collider.position.sum(this.collider.axis[0].mulEs(this.collider.extents.x).sum(this.collider.axis[1].mulEs(this.collider.extents.z)));
@@ -175,10 +173,28 @@ export default class CuePool{
                 let calc = new Vec2(0,2.2).applyPositiveRotation(-this.rotation.z).sum(new Vec2(0,this.maxPointZ));
                 this.position = ball.position.sub(calc);
             }
-        }     
+        }
     }
 
     applyCueForce(){
         this.position = this.position.sum(this.power);
+    }
+
+
+    disableCue(scene){
+        if(this.active){
+            this.active = false;
+            let transp = new StandardMaterial("transpMat", scene);
+            transp.alpha = 0.1;
+            // console.log(this.mesh);
+            this.mesh.material = transp;
+        }
+    }
+
+    enableCue(){
+        if(!this.active){
+            this.active = true;
+            this.mesh.material = this.defaultMaterial;
+        }
     }
 }

@@ -55,27 +55,35 @@ export default class PhysicsLoop{
         }
 
         else if(element instanceof OBBCollider && secondElement instanceof SphereCollider){
-            if(OBBCollider.checkOBBToSphereOverlap(secondElement, element)){
-                if(secondElement instanceof SphereCollider){
-                    element.parent.power = new Vec2(0,0);
-                    let rot = element.parent.rotation;
-                    let rotX = Math.sin(rot.z);
-                    let rotY = Math.cos(rot.z);
-                    secondElement.parent.movement = new Vec2(rotX, rotY).mulEs(1);
+            if(element.parent.active){
+                if(OBBCollider.checkOBBToSphereOverlap(secondElement, element)){
+                    if(secondElement instanceof SphereCollider){
+                        element.parent.power = new Vec2(0,0);
+                        let rot = element.parent.rotation;
+                        let rotX = Math.sin(rot.z);
+                        let rotY = Math.cos(rot.z);
+                        secondElement.parent.movement = new Vec2(rotX, rotY).mulEs(1);
+                    }
                 }
             }
         }
 
         else if(element instanceof AABBCollider && secondElement instanceof SphereCollider){
-            if(AABBCollider.checkAABBSphereOverlap(element,secondElement)){
-                secondElement.parent.movement = secondElement.parent.movement.mulEs(-1);
-                // console.log( secondElement.parent.movement);
+            if(!secondElement.parent.static){  
+                if(AABBCollider.checkAABBSphereOverlap(element,secondElement)){
+                    secondElement.parent.movement = secondElement.parent.movement.mulEs(-1);
+                }
             }
         }
 
-        // else if(element instanceof SphereCollider && secondElement instanceof OBBCollider){
-        //     console.log(OBBCollider.checkOBBToSphereOverlap(element, secondElement));
-        // }
+        else if(element instanceof SphereCollider && secondElement instanceof SphereCollider){
+            if(!(element.parent.static && secondElement.parent.static)){
+                if(SphereCollider.checkCircleOverlap(element, secondElement)){
+                    console.log("collided");
+                }
+            }
+        }
+
     }
 
     checkMovements(){

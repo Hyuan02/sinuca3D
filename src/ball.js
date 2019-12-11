@@ -23,6 +23,7 @@ export default class Ball{
         this.position = position;
         this.movement = new Vec2(0,0);
         this.whiteBall = whiteBall;
+        this.static = false;
     }
 
 
@@ -44,8 +45,6 @@ export default class Ball{
         let points = UtilFunctions.valuesToVectors(mesh.getVerticesData(BABYLON.VertexBuffer.PositionKind));
         let collider = SphereCollider.containingCircle(points);
         let ball = new Ball(mesh, new Vec2(mesh.position.x, mesh.position.z), collider, whiteBall);
-        if(whiteBall)
-            ballsController.whiteBall = ball;
         collider.parent = ball;
         ballsController.updateBalls(ball);
         let pLoop = new PhysicsLoop();

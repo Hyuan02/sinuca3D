@@ -15,5 +15,15 @@ export default class BallsController{
             this.whiteBall = ball;
         }
     }
+
+
+    checkBallsAction(){
+        for (let index = 0; index < balls.length; index++) {
+            if(balls[index].movement.x > 0 || balls[index].movement.x < 0 || balls[index].movement.z > 0 || balls[index].movement.z < 0 ){
+                return true;
+            }
+        }
+        return false;
+    }
     
 }
