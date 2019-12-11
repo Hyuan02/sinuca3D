@@ -109,6 +109,19 @@ export default class Ball{
         }
     }
 
+    applyEffect(){
+        if(this.mesh.position.y>0){
+            this.movement = this.movement.mulEs(0.8);
+            this.mesh.position.y -= 1;
+        }
+        else{
+            if(this.whiteBall){
+                this.mesh.position.y = 20;
+                this.position = new Vec2(0,0);
+            }
+        }
+    }
+
 
 
 

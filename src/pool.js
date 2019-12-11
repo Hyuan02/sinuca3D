@@ -4,7 +4,7 @@ import { Vector3, Matrix, VertexBuffer, MeshBuilder } from "babylonjs";
 import Vec3 from "./vector3D";
 import Vec2 from "./vector2D";
 
-
+const RADIUS = 2.5;
 const AABBPoints = [
     [
         new Vector3(17, 20, 37.8304),
@@ -94,8 +94,8 @@ export default class Pool{
         this.pLoop.updateColliders(aabb6);
 
         SpherePoints.forEach((e)=>{
-            let mesh = new BABYLON.MeshBuilder.CreateSphere("meshSphere", {diameter: 3}, scene, BABYLON.Mesh.BACKSIDE);
-            this.pLoop.updateColliders(new SphereCollider(new Vec2(e.x, e.z), 3.0, this, new Vec2(e.x, e.z)));
+            let mesh = new BABYLON.MeshBuilder.CreateSphere("meshSphere", {diameter: RADIUS}, scene, BABYLON.Mesh.BACKSIDE);
+            this.pLoop.updateColliders(new SphereCollider(new Vec2(e.x, e.z), RADIUS/2, this, new Vec2(e.x, e.z)));
             mesh.position = e;
             mesh.material = myMaterial;
             this.colliderShapes.push(mesh);
