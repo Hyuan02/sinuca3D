@@ -42,7 +42,31 @@ export class SphereCollider{
         movement1 = movement1.sub(distance.mulEs(calc));
         movement2 = movement2.sum(distance.mulEs(calc));
 
-        return {movement1, movement2};
+        return [movement1, movement2];
+    }
+
+
+
+    static applyForceBalls2(sphere1, sphere2){
+        let distanceV = sphere1.position.sub(sphere2.position);
+        let distanceQtd = distanceV.mag();
+
+        let pushApart = distanceV.mulEs((sphere1.radius + sphere2.radius)-distanceQtd/distanceQtd);
+
+        // sphere1.parent.position = sphere1.parent.position.sum(pushApart);
+        // sphere2.parent.position = sphere2.parent.position.sub(pushApart);
+
+        let velocity = sphere1.parent.movement.sub(sphere2.parent.movement);
+        let vn = velocity.dot(pushApart.norm());
+
+        if(vn>0) return;
+
+        let imp = -0.8 * vn;
+        let impulse = pushApart.norm().mulEs(imp);
+
+        sphere1.parent.movement = sphere1.parent.movement.sum(impulse);
+        sphere2.parent.movement = sphere2.parent.movement.sub(impulse);
+
     }
 
     static checkCircleOverlap(sphere1, sphere2) {

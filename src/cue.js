@@ -177,7 +177,7 @@ export default class CuePool{
     }
 
     applyCueForce(){
-        this.position = this.position.sum(this.power);
+        this.position = this.position.sum(this.power.mulEs(1.5));
     }
 
 

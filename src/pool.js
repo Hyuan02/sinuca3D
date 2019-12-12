@@ -68,6 +68,7 @@ export default class Pool{
         this.pLoop = new PhysicsLoop();
         this.colliderShapes = [];
         this.static = true;
+        this.active = true;
     }
     
     generateWallColliders(scene){

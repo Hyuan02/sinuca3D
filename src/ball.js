@@ -25,6 +25,7 @@ export default class Ball{
         this.movement = new Vec2(0,0);
         this.whiteBall = whiteBall;
         this.static = false;
+        this.active = true;
     }
 
 
@@ -47,6 +48,7 @@ export default class Ball{
         let collider = SphereCollider.containingCircle(points);
         let ball = new Ball(mesh, new Vec2(mesh.position.x, mesh.position.z), collider, whiteBall);
         collider.parent = ball;
+        collider.position = new Vec2(x,z);
         ballsController.updateBalls(ball);
         let pLoop = new PhysicsLoop();
         pLoop.updateColliders(collider);
@@ -111,7 +113,7 @@ export default class Ball{
     }
 
     applyEffect(){
-        if(this.mesh.position.y>0){
+        if(this.mesh.position.y>2){
             this.movement = this.movement.mulEs(0.8);
             this.mesh.position.y -= 1;
         }
@@ -119,6 +121,9 @@ export default class Ball{
             if(this.whiteBall){
                 this.mesh.position.y = 20;
                 this.position = new Vec2(0,0);
+            }
+            else{
+                // this.active = false;
             }
         }
     }

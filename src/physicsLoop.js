@@ -76,12 +76,17 @@ export default class PhysicsLoop{
             }
         }
 
-        else if(element instanceof SphereCollider && secondElement instanceof SphereCollider){
-            if(!(element.parent.static && secondElement.parent.static)){
-                if(SphereCollider.checkCircleOverlap(element, secondElement)){
-                    if(element.parent.static || secondElement.parent.static){
-                        let ball = !element.parent.static ? element.parent : secondElement.parent;
-                        ball.applyEffect();
+        else if (element instanceof SphereCollider && secondElement instanceof SphereCollider) {
+            if (element.parent.active && secondElement.parent.active) {
+                if (!(element.parent.static && secondElement.parent.static)) {
+                    if (SphereCollider.checkCircleOverlap(element, secondElement)) {
+                        if (element.parent.static || secondElement.parent.static) {
+                            let ball = !element.parent.static ? element.parent : secondElement.parent;
+                            ball.applyEffect();
+                        }
+                        else {
+                            SphereCollider.applyForceBalls2(element, secondElement);
+                        }
                     }
                 }
             }

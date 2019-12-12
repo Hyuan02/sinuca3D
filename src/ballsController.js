@@ -3,6 +3,8 @@ import * as BABYLON from 'babylonjs';
 var balls = [];
 var whiteBall;
 
+const BALLS_DISTANCE = 20;
+
 const colors = [
     new BABYLON.Color3.FromHexString("#f2f542"),
     new BABYLON.Color3.FromHexString("#4454A8"),
@@ -45,7 +47,7 @@ export default class BallsController{
         let colorIndex = 0;
         for(let i=0; i<3; i++){
             for(let j = i; j<4; j++){
-                let e = Ball.createBall(j*3.2, i*3.2, scene, false);
+                let e = Ball.createBall(j*3.2 , i*3.2 + BALLS_DISTANCE, scene, false);
                 let material =  new BABYLON.StandardMaterial('color', scene);
                 material.diffuseColor = colors[colorIndex];
                 e.mesh.material = material;
