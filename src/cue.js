@@ -56,7 +56,6 @@ export default class CuePool{
     }
 
     checkControl(inputMap){
-        if(this.moveMode){
             if(inputMap["q"]){
                 this.rotation = this.rotation.sum(new Vec2(0,-1).mulEs(0.01));
             }
@@ -64,16 +63,16 @@ export default class CuePool{
                 this.rotation = this.rotation.sum(new Vec2(0,1).mulEs(0.01));
             }
 
-            if(inputMap["0"]){
+            if(inputMap["a"]){
                 this.rotation = new Vec2(0,0);
             }
-            if(inputMap["1"]){
+            if(inputMap["w"]){
                 this.rotation = new Vec2(0,Math.PI/2);
             }
-            if(inputMap["2"]){
+            if(inputMap["d"]){
                 this.rotation = new Vec2(0,Math.PI);
             }
-            if(inputMap["3"]){
+            if(inputMap["s"]){
                 this.rotation = new Vec2(0,Math.PI + Math.PI/2);
             }
 
@@ -91,15 +90,6 @@ export default class CuePool{
                     this.origin = this.position;
                 }
             }
-
-        }
-        else{
-            if(inputMap["r"]){
-                this.moveMode = !this.moveMode;
-            }
-        }
-
-
     }
 
 
