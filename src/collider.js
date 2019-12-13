@@ -1,6 +1,14 @@
-import Vec3 from "./vector3D";
 import Vec2 from "./vector2D";
 
+
+
+
+/**
+ * Classe responsavel pelo colisor esferico.
+ *
+ * @export
+ * @class SphereCollider
+ */
 export class SphereCollider{
     constructor(center, radius, parent, position = null){
         this.center = center;
@@ -10,6 +18,16 @@ export class SphereCollider{
         this.parent = parent;
     }
 
+
+
+    /**
+     *
+     * Gera um esfera sobre um determinado numero de pontos.
+     * @static
+     * @param {*} points
+     * @returns - SphereCollider
+     * @memberof SphereCollider
+     */
     static containingCircle(points){
         let center = new Vec2(0,0);
         points.forEach(e=>{
@@ -32,29 +50,22 @@ export class SphereCollider{
     }
 
 
-    static applyForceBalls(sphere1, sphere2, movement1, movement2){
-        let distance = sphere1.position.sub(sphere2.position).norm();
-        let a1 = movement1.dot(distance);
-        let a2 = movement2.dot(distance);
-
-        let calc = a1-a2;
-
-        movement1 = movement1.sub(distance.mulEs(calc));
-        movement2 = movement2.sum(distance.mulEs(calc));
-
-        return [movement1, movement2];
-    }
 
 
-
-    static applyForceBalls2(sphere1, sphere2){
+    /**
+     * Aplica a força entre duas esferas caso estejam colidindo.
+     *
+     * @static
+     * @param {*} sphere1 - Colisor1
+     * @param {*} sphere2 - Colisor2
+     * @returns
+     * @memberof SphereCollider
+     */
+    static applyForceBalls(sphere1, sphere2){
         let distanceV = sphere1.position.sub(sphere2.position);
         let distanceQtd = distanceV.mag();
 
         let pushApart = distanceV.mulEs((sphere1.radius + sphere2.radius)-distanceQtd/distanceQtd);
-
-        // sphere1.parent.position = sphere1.parent.position.sum(pushApart);
-        // sphere2.parent.position = sphere2.parent.position.sub(pushApart);
 
         let velocity = sphere1.parent.movement.sub(sphere2.parent.movement);
         let vn = velocity.dot(pushApart.norm());
@@ -69,6 +80,16 @@ export class SphereCollider{
 
     }
 
+
+    /**
+     *
+     * Retorna a intersecao entre duas esferas.
+     * @static
+     * @param {*} sphere1
+     * @param {*} sphere2
+     * @returns
+     * @memberof SphereCollider
+     */
     static checkCircleOverlap(sphere1, sphere2) {
        return sphere1.position.sub(sphere2.position).mag() < sphere1.radius + sphere2.radius;
     }
@@ -85,12 +106,32 @@ export class AABBCollider{
     }
 
 
+    /**
+     * Checa a intersecção entre duas AABBs.
+     *
+     * @static
+     * @param {*} a
+     * @param {*} b
+     * @returns
+     * @memberof AABBCollider
+     */
     static checkAABBOverlap(a, b){
         return (a.min.x + a.position.x <= b.max.x + b.position.x && a.max.x + a.position.x >= b.min.x + b.position.x) &&
         (a.min.y + a.position.y <= b.max.y + b.position.y && a.max.y + a.position.y >= b.min.y + b.position.y)
     }
 
 
+
+
+    /**
+     *
+     * Checa a interseção entre uma AABB e uma esfera. 
+     * @static
+     * @param {*} box
+     * @param {*} sphere
+     * @returns
+     * @memberof AABBCollider
+     */
     static checkAABBSphereOverlap(box,sphere){
         let dist = 0;
         let positionValues = Object.values(sphere.position);
@@ -106,29 +147,6 @@ export class AABBCollider{
         }
 
         return dist <= sphere.radius * sphere.radius;
-    }
-
-    
-
-    static checkMinVecDistance(box, sphere){
-        let q = new Vec2(0,0);
-
-        let val = sphere.position.x;
-        val = Math.max(val, box.min.x);
-        val = Math.min(val, box.max.x);
-
-        q.x = val;
-        
-        val = sphere.position.z;
-        val = Math.max(val, box.min.z);
-        val = Math.min(val, box.max.z);
-
-        q.z = val;
-
-
-
-        return q;
-
     }
 
 
@@ -152,6 +170,16 @@ export class OBBCollider{
     }
 
 
+
+
+    /**
+     *
+     * Instancia a minima OBB referente a um conjunto de pontos, observando a distancia entre eles.
+     * @static
+     * @param {*} points
+     * @returns
+     * @memberof OBBCollider
+     */
     static minContainingArea(points){
         let u,v;
         let center = new Vec2();
@@ -198,6 +226,16 @@ export class OBBCollider{
 
 
 
+    
+    /**
+     *Checa a intersecao de uma esfera com uma OBB, primeiro checando se o centro dela esta contido na OBB.
+     *
+     * @static
+     * @param {*} circle
+     * @param {*} rectangle
+     * @returns
+     * @memberof OBBCollider
+     */
     static checkOBBToSphereOverlap(circle, rectangle){
         let d = circle.position.sub(rectangle.position);
         let q = rectangle.position;
@@ -222,6 +260,17 @@ export class OBBCollider{
 
 
 export class UtilFunctions{
+
+
+    
+    /**
+     * Utilizada para transformar os pontos de um mesh em vetores 2D.
+     *
+     * @static
+     * @param {*} data
+     * @returns
+     * @memberof UtilFunctions
+     */
     static valuesToVectors(data){
         let arrayVectors = new Array();
         let point = new Vec2();
@@ -239,6 +288,16 @@ export class UtilFunctions{
         return arrayVectors;
     }
 
+
+
+    /**
+     *
+     * Algoritimo de força bruta para achar os pontos maximos e minimos de um mesh.
+     * @static
+     * @param {*} data
+     * @returns
+     * @memberof UtilFunctions
+     */
     static forceBrutePoints(data){
         let maxPointX=data[0], maxPointY=data[1], maxPointZ=data[2];
         let minPointX=data[0], minPointY=data[1], minPointZ=data[2];

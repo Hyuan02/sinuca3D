@@ -1,7 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import { AABBCollider, UtilFunctions, SphereCollider } from './collider';
 import PhysicsLoop from './physicsLoop';
-import Vec3 from './vector3D';
 import BallsController from './ballsController';
 import Vec2 from './vector2D';
 import { Vector3 } from 'babylonjs';
@@ -12,7 +11,7 @@ const SIZE_BALL = 3;
 
 
 /**
- * Represents the instance of a ball.
+ * Represents a instancia de uma bola.
  *
  * @export
  * @class Ball
@@ -30,11 +29,12 @@ export default class Ball{
 
 
     /**
-     * Used to instantiate a ball and store on the vector of balls.
+     * Instancia uma bola e preenche o array de bolas, adicionando seu colisor também.
      *
-     * @param {*} x number
-     * @param {*} z number
-     * @param {*} scene BABYLON.scene
+     * @param {*} x number - Posição x.
+     * @param {*} z number - Posição z.
+     * @param {*} scene BABYLON.scene - cena
+     * @param {*} whiteBall boolean - checa se e a bola branca ou não.
      * @returns Ball
      * @memberof Ball
      */
@@ -44,7 +44,7 @@ export default class Ball{
         mesh.position.x = x;
         mesh.position.y = 20;
         mesh.position.z = z;
-        let points = UtilFunctions.valuesToVectors(mesh.getVerticesData(BABYLON.VertexBuffer.PositionKind));
+        let points = UtilFunctions.valuesToVectors(mesh.getVerticesData(BABYLON.VertexBuffer.PositionKind)); // funcao utilizada para extrair todos os pontos de um mesh
         let collider = SphereCollider.containingCircle(points);
         let ball = new Ball(mesh, new Vec2(mesh.position.x, mesh.position.z), collider, whiteBall);
         collider.parent = ball;
@@ -56,23 +56,48 @@ export default class Ball{
     }
 
 
+
+    
+    /**
+     * Retorna a posição da bola, por tradução dos parâmetros do babylon.
+     *
+     * @memberof Ball
+     */
     get position(){
         return new Vec2(this.mesh.position.x, this.mesh.position.z);
     }
 
+
+    /**
+     * Define a posição da bola, traduzindo os parâmetros para o babylon.
+     *
+     * @memberof Ball
+     */
     set position(vec2){
-        // console.log("setting pos");
-        // console.log(this.mesh);
         this.mesh.position = new Vector3(vec2.x, this.mesh.position.y, vec2.z);
         this.collider.position = vec2;
     }
 
+
+
+    /**
+     * Função responsável por aplicar as forças na bola. 
+     *
+     * @memberof Ball
+     */
     applyMovement(){
         this.position = this.position.sum(this.movement);
         this.applyFriction();
         this.applyRotation();
     }
 
+
+
+    /**
+     *
+     * Função responsável por aplicar uma força de atrito na bola, até chegar ao movimento nulo.
+     * @memberof Ball
+     */
     applyFriction(){
         // console.log(this.movement);
         if(this.movement.x >= 0.1 || this.movement.z > 0.1){
@@ -86,32 +111,29 @@ export default class Ball{
         }
     }
 
+
+
+    /**
+     * Função responsável por um efeito estético de rotação da bola.
+     *
+     * @memberof Ball
+     */
     applyRotation(){
         if(this.movement.x > 0 || this.movement.z > 0){
-            let rot =  this.movement.div(SIZE_BALL);
+            let rot =  this.movement.mulEs(1.0/SIZE_BALL);
             this.mesh.rotation = new Vector3(this.mesh.rotation.x + rot.x, this.mesh.rotation.y + rot.z, this.mesh.rotation.z + 0.08);
             // console.log(this.mesh.rotation);
         }
     }
 
 
-    verifyMousePosition(pointerX, pointerY, cue){
-        if(this.whiteBall){
-            cue.position = this.position.sum(new Vec2(0, -cue.maxPointZ).mulEs(1.02));
-                        
-            let opposite = pointerY - (cue.position.z);
-            let adjacent = pointerX - (cue.position.x);
 
-            let rot = Math.atan2(opposite, adjacent);
 
-            console.log(rot);
-
-            cue.rotation = new Vec2(0, rot);
-            
-
-        }
-    }
-
+    /**
+     * Função responsável por aplicar um efeito de queda a bola quando ela cai dentro da caçapa.
+     *
+     * @memberof Ball
+     */
     applyEffect(){
         if(this.mesh.position.y>2){
             this.movement = this.movement.mulEs(0.8);
@@ -123,7 +145,7 @@ export default class Ball{
                 this.position = new Vec2(0,0);
             }
             else{
-                // this.active = false;
+                this.active = false;
             }
         }
     }

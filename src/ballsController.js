@@ -3,8 +3,12 @@ import * as BABYLON from 'babylonjs';
 var balls = [];
 var whiteBall;
 
+
+//distancia entre bolas
 const BALLS_DISTANCE = 20;
 
+
+//cores
 const colors = [
     new BABYLON.Color3.FromHexString("#f2f542"),
     new BABYLON.Color3.FromHexString("#4454A8"),
@@ -24,6 +28,13 @@ export default class BallsController{
         this.whiteBall = whiteBall; 
     }
 
+
+    /**
+     *atualiza o vetor das bolas.
+     *
+     * @param {*} ball - a bola a ser guardada.
+     * @memberof BallsController
+     */
     updateBalls(ball){
         balls.push(ball);
         this.balls = balls;
@@ -33,7 +44,13 @@ export default class BallsController{
         }
     }
 
-
+    
+    /**
+     * Checa se ha alguma bola se movimentando.
+     *
+     * @returns
+     * @memberof BallsController
+     */
     checkBallsAction(){
         for (let index = 0; index < balls.length; index++) {
             if(balls[index].movement.x > 0 || balls[index].movement.x < 0 || balls[index].movement.z > 0 || balls[index].movement.z < 0 ){
@@ -43,6 +60,13 @@ export default class BallsController{
         return false;
     }
 
+
+    /**
+     *
+     * Instancia as outras bolas de sinuca do jogo.
+     * @param {*} scene - cena para instanciar.
+     * @memberof BallsController
+     */
     instantiate8Balls(scene){
         let colorIndex = 0;
         for(let i=0; i<3; i++){

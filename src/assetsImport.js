@@ -14,7 +14,7 @@ const CUE_FILE = "10522_Pool_Cue_v1_L3.obj";
 
 
 /**
- * Class with functions to import the assets.
+ * Classe com funções para importar os asssets.
  *
  * @export
  * @class AssetsImport
@@ -23,7 +23,7 @@ export default class AssetsImport{
 
 
     /**
-     * Imports the pool table.
+     * Importa a mesa de sinuca.
      *
      * @static
      * @param {*} scene BABYLON.Scene
@@ -41,7 +41,7 @@ export default class AssetsImport{
 
 
     /**
-     * Imports the cue.
+     * Importa o taco.
      *
      * @static
      * @param {*} scene 

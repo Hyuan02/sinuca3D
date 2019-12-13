@@ -1,10 +1,11 @@
 import PhysicsLoop from "./physicsLoop";
 import {UtilFunctions, AABBCollider, SphereCollider} from "./collider";
 import { Vector3, Matrix, VertexBuffer, MeshBuilder } from "babylonjs";
-import Vec3 from "./vector3D";
 import Vec2 from "./vector2D";
 
 const RADIUS = 2.5;
+
+// Colisores AABB fixos que representam as paredes da mesa.
 const AABBPoints = [
     [
         new Vector3(17, 20, 37.8304),
@@ -50,6 +51,8 @@ const AABBPoints = [
     ]
 ]
 
+
+// COlisores esfericos fixos que representam as caçapas da mesa.
 const SpherePoints = [
     new Vector3(-19.8,20,-29.5),
     new Vector3(-19.8,20,32),
@@ -71,6 +74,13 @@ export default class Pool{
         this.active = true;
     }
     
+
+    /**
+     *
+     * Gera os colisores da mesa.
+     * @param {*} scene - cena.
+     * @memberof Pool
+     */
     generateWallColliders(scene){
         const myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
         myMaterial.diffuseColor = new BABYLON.Color3(1, 0, 1);
@@ -107,12 +117,26 @@ export default class Pool{
     }
 
 
+
+    
+    /**
+     * Desabilita as caixas de debug
+     *
+     * @memberof Pool
+     */
     disableColliders(){
         this.colliderShapes.forEach((e)=>{
             e.setEnabled(false);
         });
     }
     
+
+
+    /**
+     *
+     * HAbilita as caixas de debug.
+     * @memberof Pool
+     */
     enableColliders(){
         this.colliderShapes.forEach((e)=>{
             e.setEnabled(true);

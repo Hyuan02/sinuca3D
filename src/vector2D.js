@@ -7,7 +7,7 @@ export default class Vec2{
 
     /**
      *
-     * Sum this vector with another vector, returning the result. 
+     * Soma um vetor com o outro retornando o resultado
      * @param {*} vector Vec2
      * @returns Vec2 
      * @memberof Vec2
@@ -17,7 +17,7 @@ export default class Vec2{
     }
 
     /**
-     * Subtracts this vector with another vector, returning the result.
+     * Subtrai um vetor com o outro retornando o resultado;
      *
      * @param {*} vector Vec2
      * @returns Vec2
@@ -29,31 +29,7 @@ export default class Vec2{
 
 
     /**
-     * Multiplies this vector with another vector returning the result.
-     *
-     * @param {*} vector
-     * @returns Vec3
-     * @memberof Vec3
-     */
-    mul(vector){
-        return new Vec2(this.x*vector.x, this.z * vector.z);
-    }
-
-
-    /**
-     * Divides this vector with another vector returning the result.
-     *
-     * @param {*} vector
-     * @returns Vec2
-     * @memberof Vec2
-     */
-    div(number){
-        return new Vec2(this.x/number, this.z/number);s
-    }
-
-
-    /**
-     * Return the magnitude of the vector.
+     * Retorna a magnitude de um vetor.
      *
      * @returns number
      * @memberof Vec2
@@ -67,7 +43,7 @@ export default class Vec2{
 
     
     /**
-     * Return the normalized vector.
+     * Return o vetor normalizado.
      *
      * @returns Vec2
      * @memberof Vec2
@@ -79,7 +55,9 @@ export default class Vec2{
 
 
     /**
-     * Return the vector multiplied by a escalar.
+     * Retorna o vetor multiplicado por um escalar.
+     * @returns Vec2
+     * @memberof Vec2
      */
 
      mulEs(num){
@@ -87,19 +65,54 @@ export default class Vec2{
      }
 
 
+    
+    /**
+     * Retorna o produto escalar de dois vetores.
+     *
+     * @param {*} vector
+     * @returns number
+     * @memberof Vec2
+     */
     dot(vector){
         return (this.x * vector.x) + (this.z * vector.z);
      }
 
+
+
+     /**
+      * Retorna a projeção de dois vetores.
+      *
+      * @param {*} vector
+      * @returns Vec2
+      * @memberof Vec2
+      */
      proj(vector){
          return vector.mulEs(this.dot(vector)/vector.dot(vector));
      }
 
+
+
+     /**
+      * Retorna o calculo de deslizamento de dois vetores 
+      *
+      * @param {*} vector
+      * @returns
+      * @memberof Vec2
+      */
      slide(vector){
          return this.sub(this.proj(vector));
      }
 
 
+
+
+     /**
+      * Aplica a matriz de translação positiva com um determinado ângulo.
+      *
+      * @param {*} ang - angulo em radianos.
+      * @returns Vec2
+      * @memberof Vec2
+      */
      applyPositiveRotation(ang){
         let cosAng = Math.cos(ang);
         // console.log("cosAng: ", cosAng);

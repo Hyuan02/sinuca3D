@@ -4,24 +4,32 @@ import './assetsImport';
 import './assetsImport';
 import AssetsImport from './assetsImport';
 import Ball from './ball';
-import Vec3 from './vector3D';
 import CuePool from './cue';
 import PhysicsLoop from './physicsLoop';
 import Pool from './pool';
 import BallsController from './ballsController';
 import GameInterface from './interface';
 
-
+// Pega o canvas correspondente a renderização
 const mainCanvas = document.querySelector("#mainRender");
-// console.log(mainCanvas);
 
+
+//Inicia a engine para renderização
 const engine = new BABYLON.Engine(mainCanvas, true, { preserveDrawingBuffer: true, stencil: true });
 
-
+//Inicia a classe responsaável por controlar toda a fisica
 const physicsLoop = new PhysicsLoop();
+
+// Inicia o mapa de controles do jogo
 let controlsMap = {};
+
+//variaveis que controlam objetos do jogo
 let cue, camera, pool, scene, gInterface;
+
+// cena do jogo
 let SCENE;
+
+// Funcao para carregar os assets e criar a cena do jogo, carregando a mesa, a bola inicial branca, o taco e a camera
 const createScene = () => {
     return new Promise((resolve, reject) => {
         const scene = new BABYLON.Scene(engine);
@@ -49,7 +57,7 @@ const createScene = () => {
 }
 
 
-// call the createScene function
+// apos chamar a funcao e ela ser resolvida, e instanciado as 9 bolas que existem no jogo
 createScene().then((scene) => {
     SCENE = scene;
     let ballsController = new BallsController();
@@ -62,7 +70,7 @@ createScene().then((scene) => {
             cue.enableCue(SCENE);
         }
     });
-    // run the render loop
+    // roda o laço de renderização
     engine.runRenderLoop(function () {
         SCENE.render();
     });
@@ -73,7 +81,7 @@ createScene().then((scene) => {
 
 
 
-
+//função para a inicialização de controles do jogo 
 function initializeActionHandler(scene, cue, camera, ball) {
     scene.actionManager = new BABYLON.ActionManager(scene);
     scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, (evt) => {
@@ -91,12 +99,12 @@ function initializeActionHandler(scene, cue, camera, ball) {
     });
 }
 
-
+//funcao para adicionar observadores: Metodos que checam uma condição
 function addObservable(method) {
     SCENE.onBeforeRenderObservable.add(method);
 }
 
-// the canvas/window resize event handler
+// função para responsividade simples
 window.addEventListener('resize', function () {
     engine.resize();
 });
