@@ -105,11 +105,34 @@ export class AABBCollider{
             }
         }
 
-        // console.log(dist);
-
         return dist <= sphere.radius * sphere.radius;
-        
     }
+
+    
+
+    static checkMinVecDistance(box, sphere){
+        let q = new Vec2(0,0);
+
+        let val = sphere.position.x;
+        val = Math.max(val, box.min.x);
+        val = Math.min(val, box.max.x);
+
+        q.x = val;
+        
+        val = sphere.position.z;
+        val = Math.max(val, box.min.z);
+        val = Math.min(val, box.max.z);
+
+        q.z = val;
+
+
+
+        return q;
+
+    }
+
+
+
 
 
     

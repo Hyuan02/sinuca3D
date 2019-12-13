@@ -9,6 +9,7 @@ import CuePool from './cue';
 import PhysicsLoop from './physicsLoop';
 import Pool from './pool';
 import BallsController from './ballsController';
+import GameInterface from './interface';
 
 
 const mainCanvas = document.querySelector("#mainRender");
@@ -19,7 +20,7 @@ const engine = new BABYLON.Engine(mainCanvas, true, { preserveDrawingBuffer: tru
 
 const physicsLoop = new PhysicsLoop();
 let controlsMap = {};
-let cue, camera, pool, scene;
+let cue, camera, pool, scene, gInterface;
 let SCENE;
 const createScene = () => {
     return new Promise((resolve, reject) => {
@@ -41,6 +42,7 @@ const createScene = () => {
             camera.inputs.attached.keyboard.detachControl();
             camera.setPosition(new BABYLON.Vector3(20, 100, 0));
             new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
+            gInterface = new GameInterface();
             resolve(scene);
         });
     });
