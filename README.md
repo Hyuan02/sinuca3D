@@ -17,6 +17,13 @@ há um script para compilição com live reload bastando rodar:
 -- npm run watch
 
 
+
+
 # Issues Conhecidas
 
 Não há uma prevenção de colisão por frame, fazendo com que quando o objeto colida (como é o caso de AABB com circulo) já seja tarde demais.
+
+
+# Live do projeto 
+
+há também um link: https://hyuan02.github.io/sinuca3D/
